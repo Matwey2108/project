@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export function MiniCalendar() {
+interface MiniCalendarProps {
+  selectedDate?: Date | null;
+  onDateSelect?: (date: Date) => void;
+}
+
+export function MiniCalendar({ selectedDate, onDateSelect }: MiniCalendarProps = {}) {
   const today = new Date();
   const [viewDate, setViewDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
 
@@ -56,6 +61,21 @@ export function MiniCalendar() {
     return dayOfWeek >= 1 && dayOfWeek <= 5;
   };
 
+  const isSelected = (day: number | null) => {
+    if (!day || !selectedDate) return false;
+    return (
+      day === selectedDate.getDate() &&
+      viewDate.getMonth() === selectedDate.getMonth() &&
+      viewDate.getFullYear() === selectedDate.getFullYear()
+    );
+  };
+
+  const handleDayClick = (day: number | null) => {
+    if (!day) return;
+    const clicked = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+    onDateSelect?.(clicked);
+  };
+
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between mb-4">
@@ -93,12 +113,14 @@ export function MiniCalendar() {
         {days.map((day, index) => (
           <div
             key={index}
+            onClick={() => handleDayClick(day)}
             className={`
               aspect-square flex items-center justify-center text-sm rounded-lg transition-all
               ${day ? "hover:bg-accent cursor-pointer" : ""}
               ${isToday(day) ? "bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold shadow-lg" : ""}
-              ${!isToday(day) && isClassDay(day) ? "font-medium" : ""}
-              ${day && !isClassDay(day) && !isToday(day) ? "text-muted-foreground" : ""}
+              ${isSelected(day) && !isToday(day) ? "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-semibold ring-2 ring-blue-500" : ""}
+              ${!isToday(day) && !isSelected(day) && isClassDay(day) ? "font-medium" : ""}
+              ${day && !isClassDay(day) && !isToday(day) && !isSelected(day) ? "text-muted-foreground" : ""}
             `}
           >
             {day}

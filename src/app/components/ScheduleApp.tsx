@@ -59,6 +59,7 @@ export function ScheduleApp() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
   const [selectedTeacher, setSelectedTeacher] = useState<string>("all");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleDownloadPDF = () => {
     // Build a simple printable HTML page and trigger download
@@ -251,7 +252,7 @@ export function ScheduleApp() {
           {/* Sidebar with Calendar */}
           <aside className="lg:w-80">
             <div className="sticky top-24 space-y-4">
-              <MiniCalendar />
+              <MiniCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
               {/* Quick Info Card */}
               <div className="p-4 rounded-xl border border-border bg-card">
@@ -268,6 +269,14 @@ export function ScheduleApp() {
                     <span className="text-muted-foreground">Даты:</span>
                     <span className="font-medium">{getWeekDateRange()}</span>
                   </div>
+                  {selectedDate && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Выбрано:</span>
+                      <span className="font-medium text-blue-600 dark:text-blue-400">
+                        {selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Группа:</span>
                     <span className="font-medium">ИТ-21</span>
