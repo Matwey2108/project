@@ -48,6 +48,22 @@ const week1Schedule: DaySchedule[] = [
         teacher: "к.т.н. Сидоров К.В.",
         classroom: "405",
         type: "lecture"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Веб-разработка",
+        teacher: "к.т.н. Морозов П.Л.",
+        classroom: "Лаб. 201",
+        type: "practice"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Английский язык",
+        teacher: "к.филол.н. Козлов Н.И.",
+        classroom: "215",
+        type: "practice"
       }
     ]
   },
@@ -76,6 +92,22 @@ const week1Schedule: DaySchedule[] = [
         subject: "Английский язык",
         teacher: "к.филол.н. Козлов Н.И.",
         classroom: "215",
+        type: "practice"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Компьютерные сети",
+        teacher: "к.т.н. Волков Д.А.",
+        classroom: "410",
+        type: "lecture"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Операционные системы",
+        teacher: "к.т.н. Волков Д.А.",
+        classroom: "302",
         type: "practice"
       }
     ]
@@ -106,6 +138,22 @@ const week1Schedule: DaySchedule[] = [
         teacher: "к.т.н. Морозов П.Л.",
         classroom: "Лаб. 201",
         type: "lab"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Алгоритмы и структуры данных",
+        teacher: "к.т.н. Сидоров К.В.",
+        classroom: "405",
+        type: "practice"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Базы данных",
+        teacher: "проф. Петрова М.С.",
+        classroom: "Лаб. 203",
+        type: "lecture"
       }
     ]
   },
@@ -135,6 +183,22 @@ const week1Schedule: DaySchedule[] = [
         teacher: "к.т.н. Волков Д.А.",
         classroom: "302",
         type: "lecture"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Основы программирования",
+        teacher: "проф. Петрова М.С.",
+        classroom: "Лаб. 201",
+        type: "lab"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Веб-разработка",
+        teacher: "к.т.н. Морозов П.Л.",
+        classroom: "Лаб. 202",
+        type: "lab"
       }
     ]
   },
@@ -164,6 +228,22 @@ const week1Schedule: DaySchedule[] = [
         teacher: "к.т.н. Волков Д.А.",
         classroom: "Лаб. 203",
         type: "lab"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Высшая математика",
+        teacher: "к.ф.-м.н. Иванов А.П.",
+        classroom: "302",
+        type: "lecture"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Английский язык",
+        teacher: "к.филол.н. Козлов Н.И.",
+        classroom: "215",
+        type: "practice"
       }
     ]
   }
@@ -196,6 +276,22 @@ const week2Schedule: DaySchedule[] = [
         teacher: "проф. Петрова М.С.",
         classroom: "405",
         type: "practice"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Компьютерные сети",
+        teacher: "к.т.н. Волков Д.А.",
+        classroom: "Лаб. 203",
+        type: "lab"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Алгоритмы и структуры данных",
+        teacher: "к.т.н. Сидоров К.В.",
+        classroom: "405",
+        type: "lecture"
       }
     ]
   },
@@ -225,6 +321,22 @@ const week2Schedule: DaySchedule[] = [
         teacher: "к.филол.н. Козлов Н.И.",
         classroom: "215",
         type: "practice"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Веб-разработка",
+        teacher: "к.т.н. Морозов П.Л.",
+        classroom: "410",
+        type: "lecture"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Операционные системы",
+        teacher: "к.т.н. Волков Д.А.",
+        classroom: "Лаб. 201",
+        type: "lab"
       }
     ]
   },
@@ -254,6 +366,22 @@ const week2Schedule: DaySchedule[] = [
         teacher: "к.ф.-м.н. Иванов А.П.",
         classroom: "405",
         type: "lecture"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Основы программирования",
+        teacher: "проф. Петрова М.С.",
+        classroom: "302",
+        type: "practice"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Английский язык",
+        teacher: "к.филол.н. Козлов Н.И.",
+        classroom: "215",
+        type: "practice"
       }
     ]
   },
@@ -283,6 +411,22 @@ const week2Schedule: DaySchedule[] = [
         teacher: "к.т.н. Волков Д.А.",
         classroom: "302",
         type: "lecture"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Высшая математика",
+        teacher: "к.ф.-м.н. Иванов А.П.",
+        classroom: "302",
+        type: "practice"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Компьютерные сети",
+        teacher: "к.т.н. Волков Д.А.",
+        classroom: "410",
+        type: "practice"
       }
     ]
   },
@@ -312,6 +456,22 @@ const week2Schedule: DaySchedule[] = [
         teacher: "к.т.н. Морозов П.Л.",
         classroom: "405",
         type: "lecture"
+      },
+      {
+        pairNumber: 4,
+        time: "13:45 - 15:15",
+        subject: "Базы данных",
+        teacher: "проф. Петрова М.С.",
+        classroom: "Лаб. 203",
+        type: "practice"
+      },
+      {
+        pairNumber: 5,
+        time: "15:30 - 17:00",
+        subject: "Алгоритмы и структуры данных",
+        teacher: "к.т.н. Сидоров К.В.",
+        classroom: "Лаб. 202",
+        type: "lab"
       }
     ]
   }
