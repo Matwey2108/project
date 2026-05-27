@@ -19,6 +19,7 @@ interface ScheduleTableProps {
   searchQuery: string;
   selectedSubject: string;
   selectedTeacher: string;
+  selectedDay: string;
 }
 
 const week1Schedule: DaySchedule[] = [
@@ -477,8 +478,10 @@ const week2Schedule: DaySchedule[] = [
   }
 ];
 
-export function ScheduleTable({ week, searchQuery, selectedSubject, selectedTeacher }: ScheduleTableProps) {
-  const schedule = week === 1 ? week1Schedule : week2Schedule;
+export function ScheduleTable({ week, searchQuery, selectedSubject, selectedTeacher, selectedDay }: ScheduleTableProps) {
+  const fullSchedule = week === 1 ? week1Schedule : week2Schedule;
+  const isWeekend = selectedDay === "Суббота" || selectedDay === "Воскресенье";
+  const schedule = fullSchedule.filter(d => d.day === selectedDay);
 
   const filterClasses = (classes: ScheduleClass[]) => {
     return classes.filter(cls => {
@@ -534,6 +537,16 @@ export function ScheduleTable({ week, searchQuery, selectedSubject, selectedTeac
         return type;
     }
   };
+
+  if (isWeekend) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-12 text-center space-y-2">
+        <p className="text-4xl">🎉</p>
+        <p className="font-semibold text-lg">Выходной день</p>
+        <p className="text-muted-foreground text-sm">Занятий нет — отдыхайте!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import {
   Calendar,
+  ChevronLeft,
+  ChevronRight,
   Download,
   Search,
   Moon,
@@ -39,19 +41,23 @@ const TEACHERS = [
   { value: "Соколов В.М.", label: "Соколов В.М." },
 ];
 
-function getWeekDateRange() {
-  const now = new Date();
-  const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-  const friday = new Date(monday);
-  friday.setDate(monday.getDate() + 4);
+const DAY_NAMES: Record<number, string> = {
+  0: "Воскресенье",
+  1: "Понедельник",
+  2: "Вторник",
+  3: "Среда",
+  4: "Четверг",
+  5: "Пятница",
+  6: "Суббота",
+};
 
-  const fmt = (d: Date) =>
-    d.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
-
-  return `${fmt(monday)} – ${fmt(friday)}`;
-}
+const WEEKDAYS = [
+  { short: "Пн", full: "Понедельник", dow: 1 },
+  { short: "Вт", full: "Вторник",     dow: 2 },
+  { short: "Ср", full: "Среда",       dow: 3 },
+  { short: "Чт", full: "Четверг",     dow: 4 },
+  { short: "Пт", full: "Пятница",     dow: 5 },
+];
 
 export function ScheduleApp() {
   const { theme, setTheme } = useTheme();
@@ -59,24 +65,34 @@ export function ScheduleApp() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<string>("all");
   const [selectedTeacher, setSelectedTeacher] = useState<string>("all");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const selectedDayName = DAY_NAMES[selectedDate.getDay()];
+
+  const goToWeekday = (dow: number) => {
+    const today = new Date();
+    const todayDow = today.getDay() === 0 ? 7 : today.getDay();
+    const diff = dow - todayDow;
+    const target = new Date(today);
+    target.setDate(today.getDate() + diff);
+    setSelectedDate(target);
+  };
+
+  const shiftDay = (delta: number) => {
+    const next = new Date(selectedDate);
+    next.setDate(selectedDate.getDate() + delta);
+    setSelectedDate(next);
+  };
 
   const handleDownloadPDF = () => {
-    // Build a simple printable HTML page and trigger download
     const printContent = document.getElementById("schedule-print-area");
-    if (!printContent) {
-      toast.error("Не удалось подготовить PDF");
-      return;
-    }
+    if (!printContent) { toast.error("Не удалось подготовить PDF"); return; }
     const win = window.open("", "_blank");
-    if (!win) {
-      toast.error("Разрешите всплывающие окна для скачивания PDF");
-      return;
-    }
+    if (!win) { toast.error("Разрешите всплывающие окна для скачивания PDF"); return; }
     win.document.write(`
       <html>
         <head>
-          <title>Расписание группы ИТ-21 — Неделя ${currentWeek}</title>
+          <title>Расписание группы ИТ-21 — ${selectedDayName}, Неделя ${currentWeek}</title>
           <style>
             body { font-family: sans-serif; padding: 20px; color: #111; }
             h1 { font-size: 20px; margin-bottom: 4px; }
@@ -100,9 +116,7 @@ export function ScheduleApp() {
     });
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <div className="min-h-screen bg-background">
@@ -112,7 +126,7 @@ export function ScheduleApp() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            {/* Logo and Title */}
+            {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 via-cyan-500 to-purple-500">
                 <GraduationCap className="w-6 h-6 text-white" />
@@ -128,7 +142,7 @@ export function ScheduleApp() {
               </div>
             </div>
 
-            {/* Week Toggle and Actions */}
+            {/* Actions */}
             <div className="flex items-center gap-2 sm:gap-4">
               {/* Week Toggle */}
               <div className="flex items-center rounded-lg bg-muted p-1">
@@ -160,14 +174,10 @@ export function ScheduleApp() {
                 className="p-2 rounded-lg hover:bg-accent transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === "dark" ? (
-                  <Sun className="w-5 h-5" />
-                ) : (
-                  <Moon className="w-5 h-5" />
-                )}
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
 
-              {/* Download PDF Button */}
+              {/* Download PDF */}
               <button
                 onClick={handleDownloadPDF}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
@@ -175,8 +185,6 @@ export function ScheduleApp() {
                 <Download className="w-4 h-4" />
                 <span className="font-medium">Скачать PDF</span>
               </button>
-
-              {/* Mobile Download */}
               <button
                 onClick={handleDownloadPDF}
                 className="sm:hidden p-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg"
@@ -186,10 +194,9 @@ export function ScheduleApp() {
             </div>
           </div>
 
-          {/* Search and Filters Bar */}
+          {/* Search and Filters */}
           <div className="pb-4 pt-2">
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Search */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
@@ -208,8 +215,6 @@ export function ScheduleApp() {
                   </button>
                 )}
               </div>
-
-              {/* Filters */}
               <div className="flex gap-2">
                 <select
                   value={selectedSubject}
@@ -220,7 +225,6 @@ export function ScheduleApp() {
                     <option key={s.value} value={s.value}>{s.label}</option>
                   ))}
                 </select>
-
                 <select
                   value={selectedTeacher}
                   onChange={(e) => setSelectedTeacher(e.target.value)}
@@ -239,44 +243,90 @@ export function ScheduleApp() {
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Schedule Table */}
-          <div className="flex-1" id="schedule-print-area">
-            <ScheduleTable
-              week={currentWeek}
-              searchQuery={searchQuery}
-              selectedSubject={selectedSubject}
-              selectedTeacher={selectedTeacher}
-            />
+
+          {/* Schedule Area */}
+          <div className="flex-1">
+
+            {/* Day Navigation */}
+            <div className="flex items-center gap-2 mb-4">
+              <button
+                onClick={() => shiftDay(-1)}
+                className="p-2 rounded-lg hover:bg-accent transition-colors border border-border"
+                aria-label="Предыдущий день"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="flex gap-1 flex-1 overflow-x-auto">
+                {WEEKDAYS.map(({ short, full, dow }) => (
+                  <button
+                    key={dow}
+                    onClick={() => goToWeekday(dow)}
+                    className={`flex-1 px-3 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
+                      selectedDayName === full
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                        : "bg-muted hover:bg-accent text-foreground"
+                    }`}
+                  >
+                    {short}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => shiftDay(1)}
+                className="p-2 rounded-lg hover:bg-accent transition-colors border border-border"
+                aria-label="Следующий день"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Selected day label */}
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-xl font-bold">{selectedDayName}</h2>
+              <span className="text-sm text-muted-foreground">
+                {selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}
+              </span>
+            </div>
+
+            <div id="schedule-print-area">
+              <ScheduleTable
+                week={currentWeek}
+                searchQuery={searchQuery}
+                selectedSubject={selectedSubject}
+                selectedTeacher={selectedTeacher}
+                selectedDay={selectedDayName}
+              />
+            </div>
           </div>
 
-          {/* Sidebar with Calendar */}
+          {/* Sidebar */}
           <aside className="lg:w-80">
             <div className="sticky top-24 space-y-4">
               <MiniCalendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
-              {/* Quick Info Card */}
+              {/* Info Card */}
               <div className="p-4 rounded-xl border border-border bg-card">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-blue-500" />
-                  Текущая неделя
+                  Информация
                 </h3>
                 <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">День:</span>
+                    <span className="font-medium">{selectedDayName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Дата:</span>
+                    <span className="font-medium">
+                      {selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
+                    </span>
+                  </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Неделя:</span>
                     <span className="font-medium">Неделя {currentWeek}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Даты:</span>
-                    <span className="font-medium">{getWeekDateRange()}</span>
-                  </div>
-                  {selectedDate && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Выбрано:</span>
-                      <span className="font-medium text-blue-600 dark:text-blue-400">
-                        {selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Группа:</span>
                     <span className="font-medium">ИТ-21</span>
